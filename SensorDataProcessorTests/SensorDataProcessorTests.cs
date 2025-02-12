@@ -1,14 +1,13 @@
 namespace SensorDataProcessorTests
 {
+    using SensorDataLibrary;
     using System;
-    using System.Buffers;
     using System.Diagnostics;
-    using System.Text;
     using System.Text.Json;
     using Xunit;
     public class SensorDataProcessorTests
     {
-        private const int SensorReadingCount = 5000;
+        private const int SensorReadingCount = 10000;
 
         [Fact]
         public void ProcessSensorData_WithoutArrayPool_PerformanceTest()
@@ -16,11 +15,15 @@ namespace SensorDataProcessorTests
             // Arrange
             string jsonData = GenerateLargeJsonPayload(SensorReadingCount);
             SensorDataProcessor processor = new SensorDataProcessor();
+            int readingCount = 0;
 
             // Act
             var stopwatch = Stopwatch.StartNew();
-            int readingCount = processor.ProcessDataWithoutArrayPool(jsonData);
-            stopwatch.Stop();
+            Parallel.For(0, 100, _ =>
+            {
+                SensorDataProcessor processor = new SensorDataProcessor();
+                readingCount = processor.ProcessDataWithoutArrayPool(jsonData);
+            }); stopwatch.Stop();
 
             // Assert
             Assert.Equal(SensorReadingCount, readingCount);
@@ -33,11 +36,15 @@ namespace SensorDataProcessorTests
             // Arrange
             string jsonData = GenerateLargeJsonPayload(SensorReadingCount);
             SensorDataProcessor processor = new SensorDataProcessor();
+            int readingCount = 0;
 
             // Act
             var stopwatch = Stopwatch.StartNew();
-            int readingCount = processor.ProcessDataWithArrayPool(jsonData);
-            stopwatch.Stop();
+            Parallel.For(0, 100, _ =>
+            {
+                SensorDataProcessor processor = new SensorDataProcessor();
+                readingCount = processor.ProcessDataWithoutArrayPool(jsonData);
+            }); stopwatch.Stop();
 
             // Assert
             Assert.Equal(SensorReadingCount, readingCount);

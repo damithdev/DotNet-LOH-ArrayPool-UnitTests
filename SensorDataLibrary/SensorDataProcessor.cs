@@ -1,11 +1,8 @@
-﻿using System;
-using System.Buffers;
-using System.Diagnostics;
+﻿using System.Buffers;
 using System.Text;
 using System.Text.Json;
-using Xunit;
 
-namespace SensorDataProcessorTests
+namespace SensorDataLibrary
 {
     public class SensorDataProcessor
     {
